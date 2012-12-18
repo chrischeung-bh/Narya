@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Narya - Wandoujia 2.0 Doraemon SDK Samples</title>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <script type="text/javascript" src="src/libs/jquery-1.7.2.js"></script>
+        <script type="text/javascript" src="src/libs/require-2.0.4.js"></script>
+        <script type="text/javascript" src="src/Narya.js"></script>
+    </head>
+    <body>
+        <h1>Narya - Wandoujia 2.0 Doraemon SDK Samples</h1>
+        Current version: <version>0.2</version>
+        <h2>Narya.Device</h2>
+        <dl>
+            <dt>isConnected</dt>
+            <dd class="device-isConnected"></dt>
+            <dt>isMounted</dt>
+            <dd class="device-isMounted"></dd>
+            <dt>hasSDCard</dt>
+            <dd class="device-hasSDCard"></dd>
+            <dt>hasEmulatedSD</dt>
+            <dd class="device-hasEmulatedSD"></dd>
+            <dt>isUSB</dt>
+            <dd class="device-isUSB"></dd>
+            <dt>isWifi</dt>
+            <dd class="device-isWifi"></dd>
+            <dt>isInternet</dt>
+            <dd class="device-isInternet"></dd>
+            <dt>SDKVersion</dt>
+            <dd class="device-SDKVersion"></dd>
+            <dt>productId</dt>
+            <dd class="device-productId"></dd>
+            <dt>deviceName</dt>
+            <dd class="device-deviceName"></dd>
+            <dt>isRoot</dt>
+            <dd class="device-isRoot"></dd>
+        </dl>
+        <script type="text/javascript">
+            var deviceChangeHandler = function () {
+                $('.device-isConnected').html(Narya.Device.get('isConnected').toString());
+                $('.device-isMounted').html(Narya.Device.get('isMounted').toString());
+                $('.device-hasSDCard').html(Narya.Device.get('hasSDCard').toString());
+                $('.device-hasEmulatedSD').html(Narya.Device.get('hasEmulatedSD').toString());
+                $('.device-isUSB').html(Narya.Device.get('isUSB').toString());
+                $('.device-isWifi').html(Narya.Device.get('isWifi').toString());
+                $('.device-isInternet').html(Narya.Device.get('isInternet').toString());
+                $('.device-SDKVersion').html(Narya.Device.get('SDKVersion').toString());
+                $('.device-productId').html(Narya.Device.get('productId').toString());
+                $('.device-isRoot').html(Narya.Device.get('isRoot').toString());
+                $('.device-deviceName').html(Narya.Device.get('deviceName').toString());
+            };
+            
+            Narya.Device.on('change', deviceChangeHandler);
+        </script>
+    </body>
+</html>

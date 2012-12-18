@@ -1,0 +1,1 @@
+(function(a,b){define([],function(){a.setImmediate===b&&(a.setImmediate=function(a){return setTimeout(a,0)}),a.clearImmediate===b&&(a.clearImmediate=a.clearTimeout)})})(this)
