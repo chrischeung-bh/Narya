@@ -3108,6 +3108,12 @@
                                 });
                             }
                         }.bind(this));
+
+                        IO.requestAsync('wdj://device/features.json').done(function (resp) {
+                            if (resp.state_code === 200) {
+                                this.set('features', resp.body.value);
+                            }
+                        }.bind(this));
                     }
                 }, this);
 
