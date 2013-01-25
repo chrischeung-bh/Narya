@@ -3130,7 +3130,6 @@
                 }, this);
             },
             changeHandler : function (data) {
-                console.log(data);
                 this.set({
                     isConnected : data.connection_state,
                     isMounted : data.mmount_state === 1 ? true : false,
