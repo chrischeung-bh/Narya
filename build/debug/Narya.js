@@ -3050,7 +3050,7 @@
     });
 })(this);
 
-/*global define, doT, $, console, _, Backbone*/
+/*global define*/
 (function (window, undefined) {
     define('Device/Device',[
         'IO/IO',
@@ -3059,8 +3059,6 @@
         IO,
         QueryString
     ) {
-        console.log('Device - File loaded.');
-
         var alert = window.alert;
 
         var Device = Backbone.Model.extend({
@@ -3125,9 +3123,7 @@
 
                 IO.onmessage({
                     'data.channel' : 'device.state_changed'
-                }, function (data) {
-                    this.changeHandler(data);
-                }, this);
+                }, this.changeHandler, this);
             },
             changeHandler : function (data) {
                 this.set({
@@ -3158,7 +3154,7 @@
  *
  * Copyright 2010 - 2012 WandouLabs
  * Release under GPL License.
- * 
+ *
  * Read sourece code? Join us! We're hiring WEB front-end engineer
  * with curiosity like U!
  * http://www.wandoujia.com/join

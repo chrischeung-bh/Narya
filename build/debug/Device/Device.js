@@ -1,4 +1,4 @@
-/*global define, doT, $, console, _, Backbone*/
+/*global define*/
 (function (window, undefined) {
     define([
         'IO/IO',
@@ -7,8 +7,6 @@
         IO,
         QueryString
     ) {
-        console.log('Device - File loaded.');
-
         var alert = window.alert;
 
         var Device = Backbone.Model.extend({
@@ -73,9 +71,7 @@
 
                 IO.onmessage({
                     'data.channel' : 'device.state_changed'
-                }, function (data) {
-                    this.changeHandler(data);
-                }, this);
+                }, this.changeHandler, this);
             },
             changeHandler : function (data) {
                 this.set({
