@@ -34,6 +34,15 @@
             return status;
         };
 
+        App.detectApps = function (apps) {
+            return _.map(apps, function (app) {
+                return {
+                    packageName : app.packageName,
+                    result : App.detectApp(app.packageName, app.versionCode)
+                };
+            });
+        };
+
         return App;
     });
 }(this));
