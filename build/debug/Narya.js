@@ -2787,6 +2787,7 @@
         return MessageRouterMixin;
     });
 }(this));
+
 /*global define, $*/
 (function (window, undefined) {
     define('IO/IO',[
@@ -3148,6 +3149,161 @@
     });
 }(this));
 
+/*global define*/
+(function (window, undefined) {
+    
+
+    define('App/AppsCollection',[
+        'backbone',
+        'underscore',
+        'IO/IO',
+        'Device/Device'
+    ], function (
+        Backbone,
+        _,
+        IO,
+        Device
+    ) {
+
+        var AppsCollection = Backbone.Collection.extend({
+            url : 'wdj://apps/show.json',
+            data : {
+                upgrade_info : 1
+            },
+            parse : function (resp) {
+                if (resp.state_code === 202 && Device.get('isConnected')) {
+                    this.syncing = true;
+                    this.trigger('syncStart');
+                }
+
+                this.loadingUpdateInfo = (resp.state_code === 251 || resp.state_code === 202);
+
+                var result = _.map(resp.body.app, function (app) {
+                    return {
+                        id : app.base_info.package_name,
+                        packageName : app.base_info.package_name,
+                        versionCode : app.base_info.version_code
+                    };
+                });
+
+                return result;
+            },
+            initialize : function () {
+                var loading = false;
+                var loadingUpdateInfo = false;
+                var syncing = false;
+                Object.defineProperties(this, {
+                    loading : {
+                        set : function (value) {
+                            loading = value;
+                        },
+                        get : function () {
+                            return loading;
+                        }
+                    },
+                    loadingUpdateInfo : {
+                        set : function (value) {
+                            loadingUpdateInfo = value;
+                        },
+                        get : function () {
+                            return loadingUpdateInfo;
+                        }
+                    },
+                    syncing : {
+                        set : function (value) {
+                            syncing = value;
+                        },
+                        get : function () {
+                            return syncing;
+                        }
+                    }
+                });
+
+                this.on('update', function () {
+                    if (!loading) {
+                        loading = true;
+                        this.fetch({
+                            success : function (collection) {
+                                loading = false;
+                                collection.trigger('refresh', collection);
+                            }
+                        });
+                    }
+                }, this);
+
+                IO.Backend.onmessage({
+                    'data.channel' : 'apps.updated'
+                }, function (data) {
+                    if (syncing) {
+                        syncing = false;
+                        this.trigger('syncEnd');
+                    }
+
+                    if (!!data) {
+                        this.trigger('update');
+                    } else {
+                        loading = false;
+                    }
+                }, this);
+            }
+        });
+
+        var appsCollection;
+
+        var factory = _.extend({
+            getInstance : function () {
+                if (!appsCollection) {
+                    appsCollection = new AppsCollection();
+                    appsCollection.trigger('update');
+                }
+                return appsCollection;
+            }
+        });
+
+        return factory;
+    });
+}(this));
+
+/*global define*/
+(function (window, undefined) {
+    define('App/App',[
+        'underscore',
+        'backbone',
+        'IO/IO',
+        'App/AppsCollection'
+    ], function (
+        _,
+        Backbone,
+        IO,
+        AppsCollection
+    ) {
+        var appsCollection = AppsCollection.getInstance();
+
+        var App = _.extend({}, Backbone.Events);
+
+        appsCollection.on('refresh', function () {
+            App.trigger('refresh');
+        });
+
+        App.detectApp = function (packageName, versionCode) {
+            var targetApp = appsCollection.get('packageName');
+            var status = 0;
+            if (!targetApp) {
+                status = 0;
+            } else {
+                if (targetApp.get('versionCode') >= versionCode) {
+                    status = 1;
+                } else {
+                    status = 2;
+                }
+            }
+            return status;
+        };
+
+        return App;
+    });
+}(this));
+
 /*!
  * Narya.js Wandoujia 2.0 Doraemon JavaScript SDK v0.5
  * https://github.com/wandoulabs/Narya
@@ -3160,22 +3316,41 @@
  * http://www.wandoujia.com/join
  */
 (function (window, undefined) {
+    require.config({
+        paths : {
+            underscore : 'libraries/underscore-1.4.4',
+            backbone : 'libraries/backbone-1.0.0'
+        },
+        shim: {
+            underscore : {
+                exports : '_'
+            },
+            backbone : {
+                deps: ['underscore'],
+                exports: 'Backbone'
+            }
+        }
+    });
+
     require([
         'Doraemon/Doraemon',
         'IO/IO',
         'Social/Social',
-        'Device/Device'
+        'Device/Device',
+        'App/App'
     ], function (
         Doraemon,
         IO,
         Social,
-        Device
+        Device,
+        App
     ) {
         console.log('OneRing is now ruling Narya ...');
 
         var root = window;
 
         var Narya = {
+            App : App,
             Doraemon : Doraemon,
             IO : IO,
             Social : Social,

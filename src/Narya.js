@@ -10,22 +10,41 @@
  * http://www.wandoujia.com/join
  */
 (function (window, undefined) {
+    require.config({
+        paths : {
+            underscore : 'libraries/underscore-1.4.4',
+            backbone : 'libraries/backbone-1.0.0'
+        },
+        shim: {
+            underscore : {
+                exports : '_'
+            },
+            backbone : {
+                deps: ['underscore'],
+                exports: 'Backbone'
+            }
+        }
+    });
+
     require([
         'Doraemon/Doraemon',
         'IO/IO',
         'Social/Social',
-        'Device/Device'
+        'Device/Device',
+        'App/App'
     ], function (
         Doraemon,
         IO,
         Social,
-        Device
+        Device,
+        App
     ) {
         console.log('OneRing is now ruling Narya ...');
 
         var root = window;
 
         var Narya = {
+            App : App,
             Doraemon : Doraemon,
             IO : IO,
             Social : Social,

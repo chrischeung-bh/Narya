@@ -12,4 +12,6 @@ Doraemon/Doraemon.js
 Social/Social.js
 utils/QueryString.js
 Device/Device.js
+App/AppsCollection.js
+App/App.js
 Narya.js
