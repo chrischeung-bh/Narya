@@ -1,1 +1,0 @@
-(function(a,b){define([],function(){var b="[?&#]",c="=([^&]*)",d={};return d.get=function(d,e){var e=e||a.location.search,f=e.match(new RegExp(b+d+c,"i")),g=f&&f[1],h=g&&decodeURIComponent(g);return h},d})})(this)

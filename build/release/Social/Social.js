@@ -1,1 +1,0 @@
-(function(a,b){define(["IO/IO"],function(a){var b={};return b.share=function(b,c,d,e){var f=$.Deferred();return a.requestAsync({url:"wdj://social/doraemon_share",data:{extension_id:b,title:c||"",content:d||"",image:e||""},success:function(a){a.state_code===200?f.resolve(a):f.reject(a)}}),f.promise()},b})})(this)
