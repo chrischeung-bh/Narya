@@ -29,6 +29,27 @@
             return deferred.promise();
         };
 
+        Doraemon.openGalleryAsync = function () {
+            var deferred = $.Deferred();
+
+            IO.requestAsync({
+                url : 'wdj://window/publish.json',
+                data : {
+                    channel : 'sidebar.gallery',
+                    value : JSON.stringify({})
+                },
+                success : function (resp) {
+                    if (resp.state_code === 200) {
+                        deferred.resolve(resp);
+                    } else {
+                        deferred.reject(resp);
+                    }
+                }
+            });
+
+            return deferred.promise();
+        };
+
         Doraemon.downloadAsync = function (type, downloadUrl, title, icon, format) {
             var deferred = $.Deferred();
 
